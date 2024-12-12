@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELDP Agile Simulation Game Plan</title>
     <link rel="stylesheet" href="style.css">
-    <title>ELDP Agile Simulation Game Timer</title>
 </head>
 <body>
     <header>
@@ -15,58 +15,18 @@
         </div>
     </header>
 
-    <div id="connect-button-container">
-        <button id="connect-button">Connect Arduino</button>
-    </div>
-    <!-- <audio id="alarm-sound" src="C:\Users\poppi\OneDrive\Documents\PersonalProjects\Capstone_Metric_Display_Resources\Sound_Effects\Alarm_Sound\031974_30-seconds-alarm-72117.mp3" preload="auto"></audio> -->
-
-    <div class="timer-container">
-        <div class="timer-heading">
-            <h2>Game Time</h2>
-            <div id="timer-display">0:00</div>
+    <div class="plan-container">
+        <div class="plan-heading">
+            <h2>Plan</h2>
         </div>
 
-        <div class="BallCount">
-            <h2>Processed Balls</h2>
-            <div id="ball-count"></div>
+        <div class="plan-input">
+            <input type="number" id="plan" placeholder="Enter your Plan">
         </div>
-        <script>
-            async function startCounting() {
-                //Opens the serial port connection with the Arduino
-                port = await navigator.serial.requestPort({});
-                await port.open({ baudRate: 9600});
 
-                //This sends a signal to the Arduino that a round has begun, so the ball counter must return to 0
-                Encoder = new TextEncoderStream();
-                writableStreamClosed = Encoder.readable.pipeTo(port.writable);
-                writer = Encoder.writable.getWriter();
-                await writer.write(1);
-
-                //Creates the data stream to read the Arduino's signals
-                Decoder = new TextDecoderStream();
-                readableStreamClosed = port.readable.pipeTo(Decoder.writable);
-                reader = Decoder.readable.getReader();
-
-                //While the timer is ticking down, display the amount of balls processed and store the total.
-                //Once the timer is up, stop receiving signals and hold the final total.
-                while(localStorage.getItem("time") > 0){
-                    const { value = new Uint8Array(1), done } = await reader.read();
-                    if (done) {
-                        reader.releaseLock();
-                        break;
-                    }
-                    document.getElementById("ball-count").textContent = value;
-                    localStorage.setItem('total', value);
-                }
-            }
-        </script>
-
-        <div id="defects">
-            <h2>Defects</h2>
-            <input type="number" id="defects-input" placeholder="Enter your Defects">
-            <div id="calculate-button-container">
-                <button id="calculate-button">Calculate</button>
-            </div>
+        <div class="start-round-button-container">
+            <button id="start-round">Start Round</button>
+            <button id="clear-data-button">Clear Data</button>
         </div>
     </div>
 
@@ -74,7 +34,7 @@
         <img src="https://images.squarespace-cdn.com/content/v1/5d39c2fb4c1e5c0001790e6a/1571947140718-NPG89HWJFF5PM2B3WHU5/PSU_COE_Logo.png?format=1500w" alt="PennState College of Engineering">
     </footer>
 
-    <script src="timer_script.js"></script>
+    <script src="plan_script.js"></script>
 
 </body>
 </html>
